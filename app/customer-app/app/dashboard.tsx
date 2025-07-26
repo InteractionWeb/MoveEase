@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView, Modal, Pressable } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import PrimaryButton from '../components/ui/PrimaryButton';
+import StyledTextInput from '../components/ui/StyledTextInput';
+import DateSelector from '../components/ui/DateSelector';
 
 const DashboardScreen = () => {
   const [selectedVehicle, setSelectedVehicle] = React.useState('');
@@ -35,10 +37,10 @@ const DashboardScreen = () => {
 
         {/* Booking Inputs */}
         <View style={styles.inputGroup}>
-          <TextInput style={styles.inputBox} placeholder="Pickup location" placeholderTextColor="#7a98b6" />
-          <TextInput style={styles.inputBox} placeholder="Drop-off location" placeholderTextColor="#7a98b6" />
+          <StyledTextInput name="Pickup location" style={styles.inputBox} />
+          <StyledTextInput name="Drop-off location" style={styles.inputBox} />
           <View style={styles.row}>
-            <TextInput style={[styles.inputBox, {flex:1, marginRight:8}]} placeholder="Select date" placeholderTextColor="#7a98b6" />
+            <DateSelector placeholder="Select date" style={[styles.inputBox, {flex:1, marginRight:8}]} />
             <View style={{flex:1}}>
               <View>
                 <TouchableOpacity
@@ -75,9 +77,12 @@ const DashboardScreen = () => {
         </View>
 
         {/* Find Movers Button */}
-        <TouchableOpacity style={styles.findMoversButton}>
-          <Text style={styles.findMoversText}>Find Movers</Text>
-        </TouchableOpacity>
+        <PrimaryButton
+          text="Find Movers"
+          onPress={() => {}}
+          style={styles.findMoversButton}
+          textStyle={styles.findMoversText}
+        />
 
         {/* How it works */}
         <View style={styles.howItWorksBox}>
@@ -103,9 +108,12 @@ const DashboardScreen = () => {
               <Text style={styles.orderDetailsAddress}>123 Main St → 456 Elm St</Text>
               <Text style={styles.orderDetailsVendor}>Movers Co.</Text>
             </View>
-            <TouchableOpacity style={styles.viewDetailsButton}>
-              <Text style={styles.viewDetailsText}>View Details</Text>
-            </TouchableOpacity>
+            <PrimaryButton
+              text="View Details"
+              onPress={() => {}}
+              style={styles.viewDetailsButton}
+              textStyle={styles.viewDetailsText}
+            />
           </View>
         </View>
       </ScrollView>

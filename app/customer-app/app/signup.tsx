@@ -1,11 +1,14 @@
+import { useRouter } from 'expo-router';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import PrimaryButton from '../components/ui/PrimaryButton';
 import { auth, db } from '../firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { sendEmailVerification } from 'firebase/auth';
-import { setDoc, doc } from 'firebase/firestore';
 
 const SignupScreen = () => {
+  const router = useRouter();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -42,8 +45,7 @@ const SignupScreen = () => {
 
   const handleSignIn = () => {
     // Use Expo Router navigation to go back to login
-    const { push } = require('expo-router').useRouter();
-    push('/');
+    router.push('/');
   };
 
   return (
@@ -86,9 +88,12 @@ const SignupScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.signupButton} onPress={handleSignup} activeOpacity={0.7}>
-        <Text style={styles.signupButtonText}>Sign Up</Text>
-      </TouchableOpacity>
+      <PrimaryButton
+        text="Sign Up"
+        onPress={handleSignup}
+        style={styles.signupButton}
+        textStyle={styles.signupButtonText}
+      />
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignup} activeOpacity={0.7}>
         <Text style={styles.googleIcon}>G</Text>
         <Text style={styles.googleButtonText}>Sign Up with Google</Text>

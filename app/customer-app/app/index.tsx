@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert, SafeAreaView } from 'react-native';
-import { auth } from '../firebaseConfig';
-import { app, db } from '../firebaseConfig';
+import { useRouter } from 'expo-router';
 import { getApps } from 'firebase/app';
-import { collection, getDocs } from 'firebase/firestore';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs } from 'firebase/firestore';
+import React, { useState } from 'react';
+import { Alert, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import PrimaryButton from '../components/ui/PrimaryButton';
+import { auth, db } from '../firebaseConfig';
 
 const IndexScreen = () => {
+  const router = useRouter();
+
   // Firebase connection test
   React.useEffect(() => {
     console.log('Firebase apps:', getApps());
@@ -29,18 +32,11 @@ const IndexScreen = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         Alert.alert('Success', 'Logged in successfully!');
-        // Navigate to dashboard after login
-        const { push } = require('expo-router').useRouter();
-        push('/dashboard');
+        router.push('/dashboard');
       })
       .catch((error) => {
         Alert.alert('Login Error', error.message);
       });
-  };
-
-  const handleSignup = () => {
-    Alert.alert('Signup', 'Navigate to signup screen.');
-    // Add navigation to signup screen here
   };
 
   return (
@@ -81,19 +77,18 @@ const IndexScreen = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin} activeOpacity={0.7}>
-          <Text style={styles.loginButtonText}>Log in</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          // Use Expo Router navigation for all platforms
-          const { push } = require('expo-router').useRouter();
-          push('/signup');
-        }} activeOpacity={0.7}>
-          <Image
-            source={require('../assets/images/signup-button.png')}
-            style={styles.signupImage}
-          />
-        </TouchableOpacity>
+        <PrimaryButton
+          text="Log in"
+          onPress={handleLogin}
+          style={styles.loginButton}
+          textStyle={styles.loginButtonText}
+        />
+        <PrimaryButton
+          text="Sign Up"
+          onPress={() => router.push('/signup')}
+          style={styles.signupButton}
+          textStyle={styles.signupText}
+        />
       </View>
     </SafeAreaView>
   );
@@ -118,13 +113,6 @@ const styles = StyleSheet.create({
     color: '#1f4e79',
     textAlign: 'center',
     marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 28,
-    fontWeight: '600',
-    color: '#1f4e79',
-    textAlign: 'center',
-    marginBottom: 24,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -167,24 +155,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   signupButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#d9f0f2',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
-  },
-  signupImage: {
-    width: '100%',
-    height: 120,
-    resizeMode: 'contain',
     marginVertical: 24,
+    width: 220,
     alignSelf: 'center',
   },
   signupText: {
     fontSize: 20,
     fontWeight: '600',
     color: '#1f4e79',
+    textAlign: 'center',
   },
 });
 
