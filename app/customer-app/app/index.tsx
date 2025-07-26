@@ -29,7 +29,9 @@ const IndexScreen = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         Alert.alert('Success', 'Logged in successfully!');
-        // You can navigate or do something here
+        // Navigate to dashboard after login
+        const { push } = require('expo-router').useRouter();
+        push('/dashboard');
       })
       .catch((error) => {
         Alert.alert('Login Error', error.message);
