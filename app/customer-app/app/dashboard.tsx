@@ -1,10 +1,16 @@
+import OrderList from '@/components/ui/Orderlist';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
+import DateSelector from '../components/ui/DateSelector';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import StyledTextInput from '../components/ui/StyledTextInput';
-import DateSelector from '../components/ui/DateSelector';
+import { Colors } from '../constants/Colors';
 
 const DashboardScreen = () => {
+  const router = useRouter();
+  const colorScheme = useColorScheme() || 'light';
+  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
   const [selectedVehicle, setSelectedVehicle] = React.useState('');
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
   const vehicleOptions = [
@@ -12,51 +18,95 @@ const DashboardScreen = () => {
     { label: 'Medium Truck', value: 'truck' },
     { label: 'Large Truck', value: 'large_truck' },
   ];
+  const orders = [
+  {
+    icon: '✔️',
+    date: 'April 20',
+    address: '123 Main St → 456 Elm St',
+    vendor: 'Movers Co.',
+    onPress: () => console.log('View Details: Movers Co.'),
+  },
+  {
+    icon: '📦',
+    date: 'May 5',
+    address: '789 Oak St → 321 Pine St',
+    vendor: 'Fast Movers',
+    onPress: () => console.log('View Details: Fast Movers'),
+  },
+  {
+    icon: '🚚',
+    date: 'June 10',
+    address: '555 Maple St → 777 Cedar St',
+    vendor: 'Quick Move',
+    onPress: () => console.log('View Details: Quick Move'),
+  },
+  {
+    icon: '🚚',
+    date: 'June 10',
+    address: '555 Maple St → 777 Cedar St',
+    vendor: 'Quick Move',
+    onPress: () => console.log('View Details: Quick Move'),
+  },
+  {
+    icon: '🚚',
+    date: 'June 10',
+    address: '555 Maple St → 777 Cedar St',
+    vendor: 'Quick Move',
+    onPress: () => console.log('View Details: Quick Move'),
+  },
+  {
+    icon: '🚚',
+    date: 'June 10',
+    address: '555 Maple St → 777 Cedar St',
+    vendor: 'Quick Move',
+    onPress: () => console.log('View Details: Quick Move'),
+  },
+];
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
         {/* Header */}
         <View style={styles.headerRow}>
           <TouchableOpacity style={styles.menuIcon}>
-            <Text style={styles.menuText}>≡</Text>
+            <Text style={[styles.menuText, { color: colors.tint }]}>≡</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
             Move
-            <Text style={{color:'#2bb6a3'}}>Ease</Text>
+            <Text style={{color: colors.tint}}>Ease</Text>
           </Text>
-          <View style={styles.profileIconBox}>
-            <View style={styles.profileIcon}>
-              <Text style={styles.profileIconText}>👤</Text>
+          <TouchableOpacity style={[styles.profileIconBox, { backgroundColor: colors.background }]} onPress={() => { router.push('./profile'); }}>
+            <View style={[styles.profileIcon, { backgroundColor: colors.background }]}>
+              <Text style={[styles.profileIconText, { color: colors.text }]}>👤</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
-
+      <ScrollView style={{maxHeight:'100%'}}>
         {/* Title & Subtitle */}
-        <Text style={styles.pageTitle}>Book a Moving Service</Text>
-        <Text style={styles.pageSubtitle}>Find and book trusted movers easily.</Text>
+        <Text style={[styles.pageTitle, { color: colors.text }]}>Book a Moving Service</Text>
+        <Text style={[styles.pageSubtitle, { color: colors.tint }]}>Find and book trusted movers easily.</Text>
 
         {/* Booking Inputs */}
         <View style={styles.inputGroup}>
-          <StyledTextInput name="Pickup location" style={styles.inputBox} />
-          <StyledTextInput name="Drop-off location" style={styles.inputBox} />
+          <StyledTextInput name="Pickup location" style={[styles.inputBox, { backgroundColor: colors.background, color: colors.text, borderColor: colors.tint }]} />
+          <StyledTextInput name="Drop-off location" style={[styles.inputBox, { backgroundColor: colors.background, color: colors.text, borderColor: colors.tint }]} />
           <View style={styles.row}>
-            <DateSelector placeholder="Select date" style={[styles.inputBox, {flex:1, marginRight:8}]} />
+            <DateSelector placeholder="Select date" style={[styles.inputBox, {flex:1, marginRight:8, backgroundColor: colors.background, borderColor: colors.tint}]} />
             <View style={{flex:1}}>
               <View>
                 <TouchableOpacity
-                  style={[styles.inputBox, styles.dropdownBox]}
+                  style={[styles.inputBox, styles.dropdownBox, { backgroundColor: colors.background, borderColor: colors.tint }]}
                   activeOpacity={0.8}
                   onPress={() => setDropdownVisible(true)}
                 >
-                  <Text style={{color: selectedVehicle ? '#1a232b' : '#7a98b6', fontSize:16}}>
+                  <Text style={{color: selectedVehicle ? colors.text : colors.tint, fontSize:16}}>
                     {selectedVehicle
                       ? vehicleOptions.find(opt => opt.value === selectedVehicle)?.label
                       : 'Choose vehicle'}
                   </Text>
-                  <Text style={styles.dropdownArrow}>▼</Text>
+                  <Text style={[styles.dropdownArrow, { color: colors.tint }]}>▼</Text>
                 </TouchableOpacity>
                 {dropdownVisible && (
-                  <View style={styles.dropdownMenuInline}>
+                  <View style={[styles.dropdownMenuInline, { backgroundColor: colors.background, borderColor: colors.tint }]}>
                     {vehicleOptions.map(opt => (
                       <TouchableOpacity
                         key={opt.value}
@@ -66,7 +116,7 @@ const DashboardScreen = () => {
                           setDropdownVisible(false);
                         }}
                       >
-                        <Text style={styles.dropdownItemText}>{opt.label}</Text>
+                        <Text style={[styles.dropdownItemText, { color: colors.text }]}>{opt.label}</Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -80,8 +130,8 @@ const DashboardScreen = () => {
         <PrimaryButton
           text="Find Movers"
           onPress={() => {}}
-          style={styles.findMoversButton}
-          textStyle={styles.findMoversText}
+          style={[styles.findMoversButton, { backgroundColor: colors.tint }]}
+          textStyle={[styles.findMoversText, { color: colors.text}]}
         />
 
         {/* How it works */}
@@ -91,31 +141,93 @@ const DashboardScreen = () => {
             <Image source={require('../assets/images/partial-react-logo.png')} style={styles.illustrationImg} />
           </View>
           <View style={styles.howItWorksSteps}>
-            <Text style={styles.howItWorksTitle}>How it works</Text>
-            <View style={styles.howItWorksRow}><Text style={styles.howItWorksIcon}>📝</Text><Text style={styles.howItWorksText}>Describe Your Move</Text></View>
-            <View style={styles.howItWorksRow}><Text style={styles.howItWorksIcon}>✅</Text><Text style={styles.howItWorksText}>Compare Vendors</Text></View>
-            <View style={styles.howItWorksRow}><Text style={styles.howItWorksIcon}>🚚</Text><Text style={styles.howItWorksText}>Select a Mover</Text></View>
+            <Text style={[styles.howItWorksTitle, { color: colors.text }]}>How it works</Text>
+            <View style={styles.howItWorksRow}><Text style={styles.howItWorksIcon}>📝</Text><Text style={[styles.howItWorksText, { color: colors.text }]}>Describe Your Move</Text></View>
+            <View style={styles.howItWorksRow}><Text style={styles.howItWorksIcon}>✅</Text><Text style={[styles.howItWorksText, { color: colors.text }]}>Compare Vendors</Text></View>
+            <View style={styles.howItWorksRow}><Text style={styles.howItWorksIcon}>🚚</Text><Text style={[styles.howItWorksText, { color: colors.text }]}>Select a Mover</Text></View>
           </View>
         </View>
 
-        {/* Upcoming Orders */}
-        <View style={styles.upcomingOrdersBox}>
-          <Text style={styles.upcomingOrdersTitle}>Upcoming Orders</Text>
-          <View style={styles.orderCard}>
-            <View style={styles.orderDateIcon}><Text style={styles.orderDateText}>✔️</Text></View>
-            <View style={styles.orderDetailsBox}>
-              <Text style={styles.orderDetailsDate}>April 20</Text>
-              <Text style={styles.orderDetailsAddress}>123 Main St → 456 Elm St</Text>
-              <Text style={styles.orderDetailsVendor}>Movers Co.</Text>
-            </View>
-            <PrimaryButton
-              text="View Details"
-              onPress={() => {}}
-              style={styles.viewDetailsButton}
-              textStyle={styles.viewDetailsText}
-            />
+        
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+              <OrderList orders={orders} colors={colors} styles={styles} />
           </View>
-        </View>
+        {/* Upcoming Orders */}
+        {/* <View style={styles.upcomingOrdersBox}>
+          <Text style={[styles.upcomingOrdersTitle, { color: colors.text }]}>Upcoming Orders</Text>
+          <ScrollView style={{ maxHeight: 400, overflow: 'hidden', }}>
+            <View style={[styles.orderCard, { backgroundColor: colors.background, borderColor: colors.tint }]}>
+              <View style={[styles.orderDateIcon, { backgroundColor: colors.tint }]}><Text style={[styles.orderDateText, { color: colors.background }]}>✔️</Text></View>
+              <View style={styles.orderDetailsBox}>
+                <Text style={[styles.orderDetailsDate, { color: colors.text }]}>April 20</Text>
+                <Text style={[styles.orderDetailsAddress, { color: colors.tint }]}>123 Main St → 456 Elm St</Text>
+                <Text style={[styles.orderDetailsVendor, { color: colors.tint }]}>Movers Co.</Text>
+              </View>
+              <PrimaryButton
+                text="View Details"
+                onPress={() => {}}
+                style={[styles.viewDetailsButton, { backgroundColor: colors.tint }]}
+                textStyle={[styles.viewDetailsText, { color: colors.background }]}
+              />
+            </View>
+            <View style={[styles.orderCard, { backgroundColor: colors.background, borderColor: colors.tint }]}>
+              <View style={[styles.orderDateIcon, { backgroundColor: colors.tint }]}><Text style={[styles.orderDateText, { color: colors.background }]}>📦</Text></View>
+              <View style={styles.orderDetailsBox}>
+                <Text style={[styles.orderDetailsDate, { color: colors.text }]}>May 5</Text>
+                <Text style={[styles.orderDetailsAddress, { color: colors.tint }]}>789 Oak St → 321 Pine St</Text>
+                <Text style={[styles.orderDetailsVendor, { color: colors.tint }]}>Fast Movers</Text>
+              </View>
+              <PrimaryButton
+                text="View Details"
+                onPress={() => {}}
+                style={[styles.viewDetailsButton, { backgroundColor: colors.tint }]}
+                textStyle={[styles.viewDetailsText, { color: colors.background }]}
+              />
+            </View>
+            <View style={[styles.orderCard, { backgroundColor: colors.background, borderColor: colors.tint }]}>
+              <View style={[styles.orderDateIcon, { backgroundColor: colors.tint }]}><Text style={[styles.orderDateText, { color: colors.background }]}>📦</Text></View>
+              <View style={styles.orderDetailsBox}>
+                <Text style={[styles.orderDetailsDate, { color: colors.text }]}>May 5</Text>
+                <Text style={[styles.orderDetailsAddress, { color: colors.tint }]}>789 Oak St → 321 Pine St</Text>
+                <Text style={[styles.orderDetailsVendor, { color: colors.tint }]}>Fast Movers</Text>
+              </View>
+              <PrimaryButton
+                text="View Details"
+                onPress={() => {}}
+                style={[styles.viewDetailsButton, { backgroundColor: colors.tint }]}
+                textStyle={[styles.viewDetailsText, { color: colors.background }]}
+              />
+            </View>
+            <View style={[styles.orderCard, { backgroundColor: colors.background, borderColor: colors.tint }]}>
+              <View style={[styles.orderDateIcon, { backgroundColor: colors.tint }]}><Text style={[styles.orderDateText, { color: colors.background }]}>🚚</Text></View>
+              <View style={styles.orderDetailsBox}>
+                <Text style={[styles.orderDetailsDate, { color: colors.text }]}>June 10</Text>
+                <Text style={[styles.orderDetailsAddress, { color: colors.tint }]}>555 Maple St → 777 Cedar St</Text>
+                <Text style={[styles.orderDetailsVendor, { color: colors.tint }]}>Quick Move</Text>
+              </View>
+              <PrimaryButton
+                text="View Details"
+                onPress={() => {}}
+                style={[styles.viewDetailsButton, { backgroundColor: colors.tint }]}
+                textStyle={[styles.viewDetailsText, { color: colors.background }]}
+              />
+            </View>
+            <View style={[styles.orderCard, { backgroundColor: colors.background, borderColor: colors.tint }]}>
+              <View style={[styles.orderDateIcon, { backgroundColor: colors.tint }]}><Text style={[styles.orderDateText, { color: colors.background }]}>🚚</Text></View>
+              <View style={styles.orderDetailsBox}>
+                <Text style={[styles.orderDetailsDate, { color: colors.text }]}>June 10</Text>
+                <Text style={[styles.orderDetailsAddress, { color: colors.tint }]}>555 Maple St → 777 Cedar St</Text>
+                <Text style={[styles.orderDetailsVendor, { color: colors.tint }]}>Quick Move</Text>
+              </View>
+              <PrimaryButton
+                text="View Details"
+                onPress={() => {}}
+                style={[styles.viewDetailsButton, { backgroundColor: colors.tint }]}
+                textStyle={[styles.viewDetailsText, { color: colors.background }]}
+              />
+            </View>
+          </ScrollView>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -188,13 +300,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1a232b',
   },
-  container: { flex: 1, backgroundColor: '#f9fbfc' },
+  container: { flex: 1, backgroundColor: '#f9fcfaff' },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16 },
   menuIcon: { padding: 8 },
-  menuText: { fontSize: 28, color: '#2bb6a3', fontWeight: '700' },
+  menuText: { fontSize: 28, color: '#2bb667ff', fontWeight: '700' },
   headerTitle: { fontSize: 28, fontWeight: '700', color: '#1a232b', flex: 1, textAlign: 'center' },
   profileIconBox: { padding: 8 },
-  profileIcon: { backgroundColor: '#e8f0f6', borderRadius: 20, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  profileIcon: { backgroundColor: '#e8f6eeff', borderRadius: 20, width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
   profileIconText: { fontSize: 24 },
   pageTitle: { fontSize: 26, fontWeight: '700', color: '#1a232b', marginLeft: 16, marginTop: 8 },
   pageSubtitle: { fontSize: 16, color: '#7a98b6', marginLeft: 16, marginBottom: 16 },

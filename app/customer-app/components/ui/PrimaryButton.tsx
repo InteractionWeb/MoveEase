@@ -1,27 +1,17 @@
 import React from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { Theme } from '../../constants/Theme';
 
-interface PrimaryButtonProps {
+interface PrimaryButtonProps extends TouchableOpacityProps {
   text: string;
-  onPress: (event: GestureResponderEvent) => void;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
-  activeOpacity?: number;
+  style?: object;
+  textStyle?: object;
+  borderRadius?: number;
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({
-  text,
-  onPress,
-  style,
-  textStyle,
-  activeOpacity = 0.7,
-}) => {
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({ text, style, textStyle, borderRadius = Theme.borderRadius, ...rest }) => {
   return (
-    <TouchableOpacity
-      style={[styles.button, style]}
-      onPress={onPress}
-      activeOpacity={activeOpacity}
-    >
+    <TouchableOpacity activeOpacity={0.8} style={[styles.button, { borderRadius }, style]} {...rest}>
       <Text style={[styles.text, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );
@@ -29,18 +19,15 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#2bb6a3',
-    borderRadius: 24,
+    backgroundColor: '#4a9a9a',
     paddingVertical: 14,
     paddingHorizontal: 24,
     alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 120,
   },
   text: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });
 

@@ -2,8 +2,10 @@ import { useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import StyledTextInput from '../components/ui/StyledTextInput';
+import { Theme } from '../constants/Theme';
 import { auth, db } from '../firebaseConfig';
 
 const SignupScreen = () => {
@@ -52,47 +54,44 @@ const SignupScreen = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Create your account</Text>
       <View style={styles.inputLabelBox}><Text style={styles.inputLabel}>Name</Text></View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your name"
-        placeholderTextColor="#7a98b6"
+      <StyledTextInput
+        name="Enter your name"
         value={name}
         onChangeText={setName}
+        borderRadius={Theme.borderRadius}
       />
       <View style={styles.inputLabelBox}><Text style={styles.inputLabel}>Email</Text></View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your email"
-        placeholderTextColor="#7a98b6"
+      <StyledTextInput
+        name="Enter your email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        borderRadius={Theme.borderRadius}
       />
       <View style={styles.inputLabelBox}><Text style={styles.inputLabel}>Phone Number</Text></View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your phone number"
-        placeholderTextColor="#7a98b6"
+      <StyledTextInput
+        name="Enter your phone number"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
         autoCapitalize="none"
+        borderRadius={Theme.borderRadius}
       />
       <View style={styles.inputLabelBox}><Text style={styles.inputLabel}>Password</Text></View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your password"
-        placeholderTextColor="#7a98b6"
+      <StyledTextInput
+        name="Enter your password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        borderRadius={Theme.borderRadius}
       />
       <PrimaryButton
         text="Sign Up"
         onPress={handleSignup}
         style={styles.signupButton}
         textStyle={styles.signupButtonText}
+        borderRadius={Theme.borderRadius}
       />
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignup} activeOpacity={0.7}>
         <Text style={styles.googleIcon}>G</Text>
@@ -135,12 +134,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingHorizontal: 18,
     marginBottom: 18,
-    color: '#1a232b',
+    color: '#1a2b1eff',
   },
   signupButton: {
-    backgroundColor: '#1790e6',
+    backgroundColor: '#4a9a9a',
     borderRadius: 28,
-    height: 56,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 18,
