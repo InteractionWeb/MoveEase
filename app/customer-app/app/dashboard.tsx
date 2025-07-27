@@ -122,7 +122,7 @@ const DashboardScreen = () => {
 
         <PrimaryButton
           text="Find Movers"
-          onPress={() => {}}
+          onPress={() => router.push('./booking')}
           style={[styles.findMoversButton, { backgroundColor: colors.tint }]}
           textStyle={[styles.findMoversText, { color: colors.text }]}
         />

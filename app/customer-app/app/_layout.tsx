@@ -55,6 +55,9 @@ export default function RootLayout() {
       <Stack.Screen name="dashboard" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="profile" options={{ headerShown: false}} />
+      <Stack.Screen name="booking" options={{ headerShown: false}} />
+      <Stack.Screen name="contact" options={{ headerShown: false}} />
+      <Stack.Screen name="tracker" options={{ headerShown: false}} />
       <Stack.Screen name="NotFoundScreen" options={{headerShown: false}} />
       </Stack>
       <StatusBar style="auto" />
