@@ -5,7 +5,9 @@ import { collection, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  Dimensions,
   Image,
+  PixelRatio,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -18,6 +20,9 @@ import StyledTextInput from '../components/ui/StyledTextInput';
 import { Colors } from '../constants/Colors';
 import { Theme } from '../constants/Theme';
 import { auth, db } from '../firebaseConfig';
+
+const { width, height } = Dimensions.get('window');
+const scaleFont = (size: number) => size * PixelRatio.getFontScale();
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -122,42 +127,42 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: width * 0.05,
     justifyContent: 'center',
   },
   title: {
-    fontSize: 64,
+    fontSize: scaleFont(48),
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 25,
+    marginBottom: height * 0.03,
   },
   subtitle: {
-    fontSize: 38,
+    fontSize: scaleFont(26),
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: height * 0.03,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: height * 0.015,
   },
   loginButton: {
     borderRadius: 24,
-    paddingVertical: 20,
+    paddingVertical: height * 0.025,
     marginTop: 14,
     marginBottom: 24,
   },
   signupButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: height * 0.02,
     borderRadius: 25,
     overflow: 'hidden',
   },
   signupImage: {
-    width: 355,
-    height: 150,
+    width: width * 0.9,
+    height: height * 0.2,
     borderRadius: 25,
   },
   signupTextWrapper: {
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
   },
   signupText: {
     color: '#fff',
-    fontSize: 30,
+    fontSize: scaleFont(24),
     fontWeight: '600',
   },
 });

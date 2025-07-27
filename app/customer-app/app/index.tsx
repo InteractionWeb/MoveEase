@@ -1,9 +1,26 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import {
+  Dimensions,
+  PixelRatio,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from 'react-native';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import { Colors } from '../constants/Colors';
 import { Theme } from '../constants/Theme';
+
+// Responsive utility
+const { width, height } = Dimensions.get('window');
+const scale = width / 375; // base scale based on iPhone 11 width
+
+function normalize(size: number) {
+  const newSize = size * scale;
+  return Math.round(PixelRatio.roundToNearestPixel(newSize));
+}
 
 const IndexScreen = () => {
   const router = useRouter();
@@ -30,41 +47,41 @@ const IndexScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    padding: normalize(24),
     justifyContent: 'center',
   },
   headerBox: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 32,
-    marginBottom: 16,
+    marginTop: normalize(32),
+    marginBottom: normalize(16),
   },
   title: {
-    fontSize: 44,
+    fontSize: normalize(44),
     fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: normalize(8),
   },
   subtitle: {
-    fontSize: 28,
+    fontSize: normalize(28),
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: normalize(24),
   },
   loginButton: {
-    width: 60,
-    height: 60,
-    marginTop: 12,
+    width: normalize(60),
+    height: normalize(60),
+    marginTop: normalize(12),
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 0,
     borderRadius: Theme.borderRadius * 4,
   },
   arrowText: {
-    fontSize: 28,
+    fontSize: normalize(28),
     fontWeight: '700',
     textAlign: 'center',
-    lineHeight: 28,
+    lineHeight: normalize(28),
   },
 });
 
