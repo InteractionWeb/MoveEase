@@ -1,68 +1,119 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert, SafeAreaView } from 'react-native';
+import { useRouter } from 'expo-router';
+import { getApps } from 'firebase/app';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native';
+import PrimaryButton from '../components/ui/PrimaryButton';
+import StyledTextInput from '../components/ui/StyledTextInput';
+import { Colors } from '../constants/Colors';
+import { Theme } from '../constants/Theme';
+import { auth, db } from '../firebaseConfig';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const colorScheme = useColorScheme() || 'light';
+  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+
+  useEffect(() => {
+    console.log('🔥 Firebase apps:', getApps());
+    getDocs(collection(db, 'users'))
+      .then(snapshot => {
+        console.log('🧑‍🤝‍🧑 Firestore users:', snapshot.docs.map(doc => doc.data()));
+      })
+      .catch(error => {
+        console.error('❌ Firestore error:', error);
+      });
+  }, []);
 
   const handleLogin = () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please enter both email and password.');
       return;
     }
-    Alert.alert('Login', `Logging in with email: ${email}`);
-    // Add actual login logic here
-  };
 
-  const handleSignup = () => {
-    Alert.alert('Signup', 'Navigate to signup screen.');
-    // Add navigation to signup screen here
+    setLoading(true);
+    console.log('🔐 Attempting login with email:', email);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log('✅ Login successful:', userCredential);
+        Alert.alert('Success', 'Logged in successfully!');
+        router.push('/dashboard');
+      })
+      .catch((error) => {
+        console.error('❌ Login error:', error);
+        Alert.alert('Login Error', error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>MoveEase</Text>
-      <Text style={styles.subtitle}>Log in</Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>MoveEase</Text>
+      <Text style={[styles.subtitle, { color: colors.text }]}>Log in</Text>
 
       <View style={styles.inputContainer}>
-        <View style={styles.iconBox}>
-          <Text style={styles.icon}>📧</Text>
-        </View>
-        <TextInput
-          style={styles.input}
+        <StyledTextInput
           placeholder="Email"
           keyboardType="email-address"
           autoCapitalize="none"
-          placeholderTextColor="#4a90a4"
+          autoComplete="email"
+          textContentType="emailAddress"
           value={email}
           onChangeText={setEmail}
+          borderRadius={Theme.borderRadius}
+          style={{ flex: 1 }}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <View style={styles.iconBox}>
-          <Text style={styles.icon}>🔒</Text>
-        </View>
-        <TextInput
-          style={styles.input}
+        <StyledTextInput
           placeholder="Password"
           secureTextEntry
-          placeholderTextColor="#4a90a4"
+          autoComplete="password"
+          textContentType="password"
           value={password}
           onChangeText={setPassword}
+          borderRadius={Theme.borderRadius}
+          style={{ flex: 1 }}
         />
       </View>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Log in</Text>
-      </TouchableOpacity>
+      <PrimaryButton
+        text={loading ? 'Logging in...' : 'Log in'}
+        onPress={handleLogin}
+        style={[styles.loginButton, { backgroundColor: colors.tint }]}
+        borderRadius={Theme.borderRadius}
+        disabled={loading}
+      />
 
-      <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
+      <TouchableOpacity
+        style={[styles.signupButton, { backgroundColor: colors.tint }]}
+        onPress={() => router.push('/signup')}
+        activeOpacity={0.8}
+      >
         <Image
           source={require('../assets/images/signup-button.png')}
           style={styles.signupImage}
+          resizeMode="cover"
         />
-        <Text style={styles.signupText}>Sign up</Text>
+        <View style={styles.signupTextWrapper}>
+          <Text style={styles.signupText}>Sign up</Text>
+        </View>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -72,76 +123,54 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: '#f9f9f9',
     justifyContent: 'center',
   },
   title: {
-    fontSize: 36,
+    fontSize: 64,
     fontWeight: '700',
-    color: '#1f4e79',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 25,
   },
   subtitle: {
-    fontSize: 28,
+    fontSize: 38,
     fontWeight: '600',
-    color: '#1f4e79',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 30,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#4a90a4',
-    borderWidth: 2,
-    borderRadius: 12,
-    marginBottom: 16,
-    backgroundColor: '#d9f0f2',
-  },
-  iconBox: {
-    padding: 12,
-  },
-  icon: {
-    fontSize: 20,
-    color: '#4a90a4',
-  },
-  input: {
-    flex: 1,
-    height: 48,
-    fontSize: 18,
-    color: '#1f4e79',
-    paddingHorizontal: 8,
+    marginBottom: 10,
   },
   loginButton: {
-    backgroundColor: '#4a9a9a',
     borderRadius: 24,
-    paddingVertical: 14,
-    marginTop: 8,
+    paddingVertical: 20,
+    marginTop: 14,
     marginBottom: 24,
   },
-  loginButtonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
   signupButton: {
-    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#d9f0f2',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    justifyContent: 'center',
+    marginTop: 20,
+    borderRadius: 25,
+    overflow: 'hidden',
   },
   signupImage: {
-    width: 40,
-    height: 40,
-    marginRight: 12,
+    width: 355,
+    height: 150,
+    borderRadius: 25,
+  },
+  signupTextWrapper: {
+    position: 'absolute',
+    top: '38%',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
   },
   signupText: {
-    fontSize: 20,
+    color: '#fff',
+    fontSize: 30,
     fontWeight: '600',
-    color: '#1f4e79',
   },
 });
 

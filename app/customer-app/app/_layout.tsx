@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { Colors } from '../constants/Colors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,6 +16,22 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  const CustomDarkTheme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      background: Colors.dark.background,
+    },
+  };
+
+  const CustomDefaultTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: Colors.light.background,
+    },
+  };
 
   useEffect(() => {
     if (loaded) {
@@ -31,11 +48,14 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === 'dark' ? CustomDarkTheme : CustomDefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="signup" options={{ headerShown: false }} />
-        <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="signup" options={{ headerShown: false }} />
+      <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="profile" options={{ headerShown: false}} />
+      <Stack.Screen name="NotFoundScreen" options={{headerShown: false}} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
