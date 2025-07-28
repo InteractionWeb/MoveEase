@@ -116,7 +116,7 @@ export default function ContactScreen() {
         text="Chat with Movers"
         textStyle={[styles.trackButtonText, { color: colors.background }]}
         borderRadius={Theme.borderRadius}
-        onPress={() => {}}
+        onPress={() => alert('Come over here lil mama lemme whisper in yo earrr') }
       />
     </ScrollView>
   );
