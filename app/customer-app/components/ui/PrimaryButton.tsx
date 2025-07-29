@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { Dimensions, PixelRatio, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Theme } from '../../constants/Theme';
 
 interface PrimaryButtonProps extends TouchableOpacityProps {
@@ -9,9 +9,13 @@ interface PrimaryButtonProps extends TouchableOpacityProps {
   borderRadius?: number;
 }
 
+const { width } = Dimensions.get('window');
+const scale = (size: number) =>
+  PixelRatio.roundToNearestPixel((width / 375) * size);
+
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({ text, style, textStyle, borderRadius = Theme.borderRadius, ...rest }) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} style={[styles.button, { borderRadius }, style]} {...rest}>
+    <TouchableOpacity activeOpacity={0.9} style={[styles.button, { borderRadius }, style]} {...rest}>
       <Text style={[styles.text, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );
@@ -23,6 +27,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 24,
     alignItems: 'center',
+    alignSelf:'center',
+    width: scale(342),
   },
   text: {
     color: '#fff',

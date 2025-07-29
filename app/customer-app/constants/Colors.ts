@@ -4,7 +4,7 @@
  */
 
 const tintColorLight = '#6ca867ff'; // green shade for light theme
-const tintColorDark = '#9affa6ae'; // teal green shade for dark theme
+const tintColorDark = '#9affc7ae'; // teal green shade for dark theme
 
 export const Colors = {
   light: {
@@ -14,6 +14,7 @@ export const Colors = {
     icon: '#68766bff',
     tabIconDefault: '#68766cff',
     tabIconSelected: tintColorLight,
+    card: "#f2f2f2",
   },
   dark: {
     text: '#d8eadcff',
@@ -22,5 +23,6 @@ export const Colors = {
     icon: '#9ba69cff',
     tabIconDefault: '#9ca69bff',
     tabIconSelected: tintColorDark,
+    card: "#1e1e1e",
   },
 };

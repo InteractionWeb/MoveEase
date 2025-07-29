@@ -1,3 +1,3 @@
 export const Theme = {
-  borderRadius: 12,
+  borderRadius: 20,
 };

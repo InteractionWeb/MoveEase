@@ -1,6 +1,8 @@
 import React from 'react';
 import {
+  Dimensions,
   FlatList,
+  PixelRatio,
   StyleSheet,
   Text,
   TextStyle,
@@ -23,8 +25,13 @@ type OrderListProps = {
     background: string;
     tint: string;
     text: string;
+    card: string;
   };
 };
+
+const { width } = Dimensions.get('window');
+const scale = (size: number) =>
+  PixelRatio.roundToNearestPixel((width / 375) * size);
 
 const OrderList: React.FC<OrderListProps> = ({ orders, colors }) => {
   if (!orders || orders.length === 0) {
@@ -42,8 +49,8 @@ const OrderList: React.FC<OrderListProps> = ({ orders, colors }) => {
       style={[
         styles.orderCard,
         {
-          backgroundColor: colors.background,
-          borderColor: colors.tint,
+          backgroundColor: colors.card,
+          borderColor: colors.card,
         },
       ]}
     >
@@ -66,7 +73,7 @@ const OrderList: React.FC<OrderListProps> = ({ orders, colors }) => {
       <PrimaryButton
         text="View Details"
         onPress={item.onPress}
-        style={[styles.viewDetailsButton, { backgroundColor: colors.tint }]}
+        style={[styles.viewDetailsButton, { backgroundColor: colors.tint, width:scale(180)}]}
         textStyle={[styles.viewDetailsText, { color: colors.background }]}
       />
     </View>
@@ -84,58 +91,59 @@ const OrderList: React.FC<OrderListProps> = ({ orders, colors }) => {
 
 const styles = StyleSheet.create({
   listContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: scale(40),
+    paddingBottom: scale(32),
+    alignSelf:'center',
   },
   emptyContainer: {
-    padding: 24,
+    padding: scale(24),
     alignItems: 'center',
     justifyContent: 'center',
   },
   emptyText: {
-    fontSize: 18,
+    fontSize: scale(18),
     fontWeight: '600',
   },
   orderCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 16,
-    padding: 12,
-    marginBottom: 10,
-    borderWidth: 1,
+    borderRadius: scale(16),
+    padding: scale(12),
+    marginBottom: scale(10),
+    borderWidth: 1,    
   } as ViewStyle,
   orderDateIcon: {
-    borderRadius: 16,
-    width: 32,
-    height: 32,
+    borderRadius: scale(16),
+    width: scale(32),
+    height: scale(32),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
+    marginRight: scale(8),
   } as ViewStyle,
   orderDateText: {
-    fontSize: 18,
+    fontSize: scale(18),
   } as TextStyle,
   orderDetailsBox: {
     flex: 1,
   } as ViewStyle,
   orderDetailsDate: {
-    fontSize: 16,
+    fontSize: scale(16),
     fontWeight: '600',
   } as TextStyle,
   orderDetailsAddress: {
-    fontSize: 15,
+    fontSize: scale(15),
   } as TextStyle,
   orderDetailsVendor: {
-    fontSize: 14,
+    fontSize: scale(14),
   } as TextStyle,
   viewDetailsButton: {
-    borderRadius: 12,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    marginLeft: 8,
+    borderRadius: scale(12),
+    paddingVertical: scale(6),
+    paddingHorizontal: scale(10),
+    marginLeft: scale(8),
   } as ViewStyle,
   viewDetailsText: {
-    fontSize: 14,
+    fontSize: scale(14),
     fontWeight: '600',
   } as TextStyle,
 });
