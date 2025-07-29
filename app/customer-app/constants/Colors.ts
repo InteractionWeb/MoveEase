@@ -4,7 +4,7 @@
  */
 
 const tintColorLight = '#6ca867ff'; // green shade for light theme
-const tintColorDark = '#9affc7ae'; // teal green shade for dark theme
+const tintColorDark = '#9affb3ae'; // teal green shade for dark theme
 
 export const Colors = {
   light: {

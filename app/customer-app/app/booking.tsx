@@ -95,25 +95,21 @@ export default function BookingScreen() {
           ))}
         </View>
 
-        <View style={styles.buttonWrapper}>
           <PrimaryButton
-            style={[{backgroundColor: colors.tint}]}
+            style={[styles.thesebuttons, { backgroundColor: colors.tint }]}
             text="Track Move"
-            textStyle={[
-              styles.trackButtonText,
-              { fontSize: scale(18), color: colors.background },
-            ]}
+            textStyle={[styles.trackButtonText, { fontSize: scale(18), color: colors.background }]}
             borderRadius={Theme.borderRadius}
             onPress={() => router.push("/tracker")}
-          />
+            />
+
           <PrimaryButton
-            style={[{ backgroundColor: colors.icon }]}
+            style={[styles.thesebuttons, { backgroundColor: colors.icon }]}
             text="Go to Home"
             textStyle={[styles.trackButtonText, { color: colors.background }]}
             borderRadius={Theme.borderRadius}
             onPress={() => router.push("/dashboard")}
           />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -123,6 +119,7 @@ const styles = StyleSheet.create({
   container: {
     padding:10,
     flex: 1,
+    alignItems:'center',
   },
   heading: {
     fontSize: scale(24),
@@ -166,8 +163,12 @@ const styles = StyleSheet.create({
     marginBottom: scale(8),
   },
   buttonWrapper: {
-    paddingHorizontal: scale(16),
-    marginTop: scale(16),
+    // paddingHorizontal: scale(16),
+    // marginTop: scale(16),
+    backgroundColor:'red',
+  },
+  thesebuttons:{
+    marginVertical:scale(5),
   },
   trackButtonText: {
     fontWeight: "500",

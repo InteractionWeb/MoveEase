@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
@@ -15,7 +16,6 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../constants/Colors';
 import { auth, db } from '../firebaseConfig';
 
@@ -33,7 +33,7 @@ const ProfileScreen = () => {
 
   const [userName, setUserName] = useState('Loading...');
   const [memberSince, setMemberSince] = useState('Loading...');
-  const [profileImage, setProfileImage] = useState(require('../assets/images/react-logo.png'));
+  const [profileImage, setProfileImage] = useState(require('../assets/images/siuu.jpg'));
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -47,7 +47,7 @@ const ProfileScreen = () => {
             setProfileImage(
               userData.profileImage
                 ? { uri: userData.profileImage }
-                : require('../assets/images/react-logo.png')
+                : require('../assets/images/siuu.jpg')
             );
           }
           if (user.metadata?.creationTime) {
