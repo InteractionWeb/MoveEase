@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -10,16 +12,16 @@ import {
   View,
   useColorScheme,
 } from "react-native";
-import { WebView } from "react-native-webview";
+import MapView, { Marker } from "react-native-maps";
 import OrderList from "../components/ui/Orderlist";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { Colors } from "../constants/Colors";
 import { Theme } from "../constants/Theme";
+import { auth, db } from "../firebaseConfig";
 
 // Responsive utility
 const { width } = Dimensions.get("window");
 const scale = width / 375;
-
 const normalize = (size: number) =>
   Math.round(PixelRatio.roundToNearestPixel(size * scale));
 
@@ -28,26 +30,34 @@ export default function TrackerScreen() {
   const colorScheme = useColorScheme() || "light";
   const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
 
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        const userDoc = usersSnapshot.docs.find(doc => doc.data().email === user.email);
+        if (userDoc) {
+          const data = userDoc.data();
+          if (data.latitude) setLatitude(data.latitude);
+          if (data.longitude) setLongitude(data.longitude);
+        }
+      } catch (error) {
+        console.error("Failed to fetch location:", error);
+      }
+    };
+    fetchLocation();
+  }, []);
+
   const orders = [
     {
       icon: "✔️",
       date: "April 20",
       address: "123 Main St → 456 Elm St",
       vendor: "Movers Co.",
-      onPress: () => {},
-    },
-    {
-      icon: "📦",
-      date: "May 5",
-      address: "789 Oak St → 321 Pine St",
-      vendor: "Fast Movers",
-      onPress: () => {},
-    },
-    {
-      icon: "🚚",
-      date: "June 10",
-      address: "555 Maple St → 777 Cedar St",
-      vendor: "Quick Move",
       onPress: () => {},
     },
   ];
@@ -63,31 +73,57 @@ export default function TrackerScreen() {
       </View>
 
       <View style={styles.mapContainer}>
-        <WebView
-          source={{ uri: 'https://www.openstreetmap.org/export/embed.html?bbox=-122.45%2C37.75%2C-122.40%2C37.80&layer=mapnik' }}
-          style={styles.map}
+        {latitude !== null && longitude !== null ? (
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude,
+              longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+          >
+            <Marker coordinate={{ latitude, longitude }} />
+          </MapView>
+        ) : (
+          <View style={[styles.map, { justifyContent: "center", alignItems: "center" }]}>
+            <Text style={{ color: colors.text }}>No location data available</Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.coordinatesContainer}>
+        <Text style={[styles.coordinateText, { color: colors.text }]}>
+          Latitude: {latitude !== null ? latitude.toFixed(6) : "N/A"}
+        </Text>
+        <Text style={[styles.coordinateText, { color: colors.text }]}>
+          Longitude: {longitude !== null ? longitude.toFixed(6) : "N/A"}
+        </Text>
+      </View>
+
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={orders}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item }) => <OrderList orders={[item]} colors={colors} />}
+          ListEmptyComponent={() => (
+            <View style={[styles.ordercontainer, { backgroundColor: colors.background }]}>
+              <Text style={[styles.placeholderText, { color: colors.text, marginTop: 20 }]}>
+                No orders available.
+              </Text>
+              <Text style={[styles.placeholderText, { color: colors.text, marginTop: 20 }]}>
+                Your tracking information will appear here.
+              </Text>
+            </View>
+          )}
         />
       </View>
 
-      <FlatList
-        data={orders}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <OrderList orders={[item]} colors={colors} />
-        )}
-        ListEmptyComponent={() => (
-          <Text style={[styles.placeholderText, { color: colors.text, marginTop: 20 }]}>
-            No orders available.
-          </Text>
-        )}
-      />
-
-      <Text style={[styles.placeholderText, { color: colors.text, marginTop: 20 }]}>
-        Your tracking information will appear here.
-      </Text>
-
       <PrimaryButton
-        style={[styles.contactMoversButton, { backgroundColor: colors.tint, marginTop: 20 }]}
+        style={[
+          styles.contactMoversButton,
+          { backgroundColor: colors.tint, marginBottom: normalize(20), height: normalize(66) },
+        ]}
         text="Contact Movers"
         textStyle={[styles.trackButtonText, { color: colors.background }]}
         borderRadius={Theme.borderRadius}
@@ -117,14 +153,13 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   contactMoversButton: {
-    marginTop: 'auto',
+    marginTop: "auto",
     marginHorizontal: normalize(14),
     borderRadius: normalize(28),
     height: normalize(46),
     justifyContent: "center",
     alignItems: "center",
     marginBottom: normalize(12),
-    // alignSelf:"flex-end"
   },
   trackButtonText: {
     fontWeight: "500",
@@ -135,14 +170,32 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   map: {
-    width: '100%',
+    width: "100%",
     height: normalize(200),
     borderRadius: normalize(12),
+    alignSelf: "center",
   },
   mapContainer: {
-    width: '100%',
+    width: "100%",
+    top: normalize(20),
     height: normalize(200),
     borderRadius: normalize(12),
-    overflow: 'hidden',
+    overflow: "hidden",
+    backgroundColor: "transparent",
+    padding: normalize(2),
   },
+  ordercontainer: {
+    height: normalize(400),
+    backgroundColor: "blue",
+  },
+  coordinatesContainer: {
+    marginHorizontal: normalize(16),
+    marginBottom: normalize(12),
+    alignItems: "center",
+  },
+  coordinateText: {
+    fontSize: normalize(16),
+    fontWeight: "600",
+  },
+  
 });

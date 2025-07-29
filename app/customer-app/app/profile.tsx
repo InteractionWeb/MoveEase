@@ -113,12 +113,12 @@ const ProfileScreen = () => {
     }
   };
 
-  const menuItems = [
+const menuItems = [
     {
       section: 'Account',
       items: [
-        { label: 'Edit Profile', onPress: () => alert('Edit Profile page not implemented yet') },
-        { label: 'Address', onPress: () => alert('Address page not implemented yet') },
+        { label: 'Edit Profile', onPress: () => router.push('/edit-profile') },
+        { label: 'Address', onPress: () => router.push('/addresscheck') },
       ],
     },
     {

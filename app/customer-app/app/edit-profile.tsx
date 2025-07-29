@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
+import { updatePassword } from 'firebase/auth';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
@@ -85,14 +86,61 @@ const EditProfileScreen = () => {
     }
   };
 
+  const [addressSuggestions, setAddressSuggestions] = React.useState<Array<{ display_name: string; lat: string; lon: string }>>([]);
+  const [showSuggestions, setShowSuggestions] = React.useState(false);
+
+  const fetchAddressSuggestions = async (query: string) => {
+    if (!query) {
+      setAddressSuggestions([]);
+      return;
+    }
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`, {
+        headers: {
+          'User-Agent': 'MoveEaseApp/1.0 (your-email@example.com)'
+        }
+      });
+      const data = await response.json();
+      setAddressSuggestions(data);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error('Error fetching address suggestions:', error);
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const onAddressChange = (text: string) => {
+    setAddress(text);
+    fetchAddressSuggestions(text);
+  };
+
+  const onSelectSuggestion = (suggestion: { display_name: string; lat: string; lon: string }) => {
+    setAddress(suggestion.display_name);
+    setLatitude(parseFloat(suggestion.lat));
+    setLongitude(parseFloat(suggestion.lon));
+    setShowSuggestions(false);
+  };
+
   const geocodeAddress = async () => {
     if (!address) {
       Alert.alert('Error', 'Please enter an address to geocode.');
       return;
     }
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+      console.log('Geocoding address:', address);
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`, {
+        headers: {
+          'User-Agent': 'MoveEaseApp/1.0 (contact@moveeaseapp.com)'
+        }
+      });
+      if (!response.ok) {
+        console.error('Geocoding API response not ok:', response.status);
+        Alert.alert('Error', `Geocoding API error: ${response.status}`);
+        return;
+      }
       const data = await response.json();
+      console.log('Geocoding API response data:', data);
       if (data && data.length > 0) {
         setLatitude(parseFloat(data[0].lat));
         setLongitude(parseFloat(data[0].lon));
@@ -101,6 +149,7 @@ const EditProfileScreen = () => {
         Alert.alert('Error', 'Unable to geocode the address.');
       }
     } catch (error) {
+      console.error('Geocoding fetch error:', error);
       Alert.alert('Error', 'Failed to fetch geocoding data.');
     }
   };
@@ -115,7 +164,9 @@ const EditProfileScreen = () => {
       if (user) {
         // Update password if changed
         if (password) {
-          await auth.currentUser?.updatePassword(password);
+          if (auth.currentUser) {
+            await updatePassword(auth.currentUser, password);
+          }
         }
         // Update Firestore user document
         const usersSnapshot = await getDocs(collection(db, 'users'));
@@ -185,10 +236,24 @@ const EditProfileScreen = () => {
         <TextInput
           style={[styles.input, { color: colors.text, borderColor: colors.tint }]}
           value={address}
-          onChangeText={setAddress}
+          onChangeText={onAddressChange}
           placeholder="Enter your address"
           placeholderTextColor={colors.tint}
+          autoCorrect={false}
         />
+        {showSuggestions && addressSuggestions.length > 0 && (
+          <View style={[styles.suggestionsContainer, { backgroundColor: colors.background, borderColor: colors.tint }]}>
+            {addressSuggestions.map((suggestion, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => onSelectSuggestion(suggestion)}
+                style={styles.suggestionItem}
+              >
+                <Text style={{ color: colors.text }}>{suggestion.display_name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
         <TouchableOpacity style={[styles.geocodeButton, { backgroundColor: colors.tint }]} onPress={geocodeAddress}>
           <Text style={[styles.geocodeButtonText, { color: colors.background }]}>Geocode Address</Text>
         </TouchableOpacity>
@@ -234,7 +299,7 @@ const EditProfileScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -321,6 +386,18 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontWeight: '700',
     fontSize: scale(18),
+  },
+  suggestionsContainer: {
+    maxHeight: 150,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+  },
+  suggestionItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
 });
 
