@@ -12,8 +12,6 @@ import {
   View,
   useColorScheme,
   FlatList,
-  ListRenderItem,
-  ScrollView,
 } from "react-native";
 import DateSelector from "../components/ui/DateSelector";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -62,7 +60,7 @@ const DashboardScreen = () => {
     },
   ];
 
-  const renderContent: ListRenderItem<string> = () => (
+  const renderContent = () => (
     <View>
       <Text style={[styles.pageTitle, { color: colors.text }]}>
         Book a Moving Service
@@ -238,156 +236,158 @@ const DashboardScreen = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <ScrollView style={{ maxHeight: "100%" }}>
-        <Text style={[styles.pageTitle, { color: colors.text }]}>
-          Book a Moving Service
-        </Text>
-        <Text style={[styles.pageSubtitle, { color: colors.tint }]}>
-          Find and book trusted movers easily.
-        </Text>
-
-        <View style={styles.inputGroup}>
-          <StyledTextInput
-            name="Pickup location"
-            style={[
-              styles.inputBox,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.tint,
-              },
-            ]}
-          />
-          <StyledTextInput
-            name="Drop-off location"
-            style={[
-              styles.inputBox,
-              {
-                backgroundColor: colors.background,
-                color: colors.text,
-                borderColor: colors.tint,
-              },
-            ]}
-          />
-          <View style={styles.row}>
-            <DateSelector
-              placeholder="Select date"
-              style={[
-                styles.inputBox,
-                {
-                  flex: 1,
-                  marginRight: 8,
-                  backgroundColor: colors.background,
-                  borderColor: colors.tint,
-                },
-              ]}
-            />
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
+      <FlatList
+        data={orders}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <OrderList orders={[item]} colors={colors} />
+        )}
+        ListHeaderComponent={
+          <>
+            <Text style={[styles.pageTitle, { color: colors.text }]}>
+              Book a Moving Service
+            </Text>
+            <Text style={[styles.pageSubtitle, { color: colors.tint }]}>
+              Find and book trusted movers easily.
+            </Text>
+            <View style={styles.inputGroup}>
+              <StyledTextInput
+                name="Pickup location"
                 style={[
                   styles.inputBox,
-                  styles.dropdownBox,
                   {
                     backgroundColor: colors.background,
+                    color: colors.text,
                     borderColor: colors.tint,
                   },
                 ]}
-                activeOpacity={0.8}
-                onPress={() => setDropdownVisible(true)}
-              >
-                <Text
-                  style={{
-                    color: selectedVehicle ? colors.text : colors.tint,
-                    fontSize: scale(16),
-                  }}
-                >
-                  {selectedVehicle
-                    ? vehicleOptions.find(
-                        (opt) => opt.value === selectedVehicle
-                      )?.label
-                    : "Choose vehicle"}
-                </Text>
-                <Text style={[styles.dropdownArrow, { color: colors.tint }]}>
-                  ▼
-                </Text>
-              </TouchableOpacity>
-
-              {dropdownVisible && (
-                <View
+              />
+              <StyledTextInput
+                name="Drop-off location"
+                style={[
+                  styles.inputBox,
+                  {
+                    backgroundColor: colors.background,
+                    color: colors.text,
+                    borderColor: colors.tint,
+                  },
+                ]}
+              />
+              <View style={styles.row}>
+                <DateSelector
+                  placeholder="Select date"
                   style={[
-                    styles.dropdownMenuInline,
+                    styles.inputBox,
                     {
+                      flex: 1,
+                      marginRight: 8,
                       backgroundColor: colors.background,
                       borderColor: colors.tint,
                     },
                   ]}
-                >
-                  {vehicleOptions.map((opt) => (
-                    <TouchableOpacity
-                      key={opt.value}
-                      style={styles.dropdownItem}
-                      onPress={() => {
-                        setSelectedVehicle(opt.value);
-                        setDropdownVisible(false);
+                />
+                <View style={{ flex: 1 }}>
+                  <TouchableOpacity
+                    style={[
+                      styles.inputBox,
+                      styles.dropdownBox,
+                      {
+                        backgroundColor: colors.background,
+                        borderColor: colors.tint,
+                      },
+                    ]}
+                    activeOpacity={0.8}
+                    onPress={() => setDropdownVisible(true)}
+                  >
+                    <Text
+                      style={{
+                        color: selectedVehicle ? colors.text : colors.tint,
+                        fontSize: scale(16),
                       }}
                     >
-                      <Text
-                        style={[
-                          styles.dropdownItemText,
-                          { color: colors.text },
-                        ]}
-                      >
-                        {opt.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                      {selectedVehicle
+                        ? vehicleOptions.find(
+                            (opt) => opt.value === selectedVehicle
+                          )?.label
+                        : "Choose vehicle"}
+                    </Text>
+                    <Text style={[styles.dropdownArrow, { color: colors.tint }]}>
+                      ▼
+                    </Text>
+                  </TouchableOpacity>
+
+                  {dropdownVisible && (
+                    <View
+                      style={[
+                        styles.dropdownMenuInline,
+                        {
+                          backgroundColor: colors.background,
+                          borderColor: colors.tint,
+                        },
+                      ]}
+                    >
+                      {vehicleOptions.map((opt) => (
+                        <TouchableOpacity
+                          key={opt.value}
+                          style={styles.dropdownItem}
+                          onPress={() => {
+                            setSelectedVehicle(opt.value);
+                            setDropdownVisible(false);
+                          }}
+                        >
+                          <Text
+                            style={[
+                              styles.dropdownItemText,
+                              { color: colors.text },
+                            ]}
+                          >
+                            {opt.label}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  )}
                 </View>
-              )}
+              </View>
             </View>
-          </View>
-        </View>
-
-        <PrimaryButton
-          text="Find Movers"
-          onPress={() => router.push("./booking")}
-          style={[styles.findMoversButton, { backgroundColor: colors.tint }]}
-          textStyle={[styles.findMoversText, { color: colors.text }]}
-        />
-
-        <View style={styles.howItWorksBox}>
-          <Image
-            source={require("../assets/images/partial-react-logo.png")}
-            style={styles.illustrationImg}
-          />
-          <View style={styles.howItWorksSteps}>
-            <Text style={[styles.howItWorksTitle, { color: colors.text }]}>
-              How it works
-            </Text>
-            <View style={styles.howItWorksRow}>
-              <Text style={styles.howItWorksIcon}>📝</Text>
-              <Text style={[styles.howItWorksText, { color: colors.text }]}>
-                Describe Your Move
-              </Text>
+            <PrimaryButton
+              text="Find Movers"
+              onPress={() => router.push("./booking")}
+              style={[styles.findMoversButton, { backgroundColor: colors.tint }]}
+              textStyle={[styles.findMoversText, { color: colors.text }]}
+            />
+            <View style={styles.howItWorksBox}>
+              <Image
+                source={require("../assets/images/partial-react-logo.png")}
+                style={styles.illustrationImg}
+              />
+              <View style={styles.howItWorksSteps}>
+                <Text style={[styles.howItWorksTitle, { color: colors.text }]}>
+                  How it works
+                </Text>
+                <View style={styles.howItWorksRow}>
+                  <Text style={styles.howItWorksIcon}>📝</Text>
+                  <Text style={[styles.howItWorksText, { color: colors.text }]}>
+                    Describe Your Move
+                  </Text>
+                </View>
+                <View style={styles.howItWorksRow}>
+                  <Text style={styles.howItWorksIcon}>✅</Text>
+                  <Text style={[styles.howItWorksText, { color: colors.text }]}>
+                    Compare Vendors
+                  </Text>
+                </View>
+                <View style={styles.howItWorksRow}>
+                  <Text style={styles.howItWorksIcon}>🚚</Text>
+                  <Text style={[styles.howItWorksText, { color: colors.text }]}>
+                    Select a Mover
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.howItWorksRow}>
-              <Text style={styles.howItWorksIcon}>✅</Text>
-              <Text style={[styles.howItWorksText, { color: colors.text }]}>
-                Compare Vendors
-              </Text>
-            </View>
-            <View style={styles.howItWorksRow}>
-              <Text style={styles.howItWorksIcon}>🚚</Text>
-              <Text style={[styles.howItWorksText, { color: colors.text }]}>
-                Select a Mover
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={{ flex: 1, backgroundColor: colors.background }}>
-          <OrderList orders={orders} colors={colors} />
-        </View>
-      </ScrollView>
+          </>
+        }
+      />
     </SafeAreaView>
   );
 };

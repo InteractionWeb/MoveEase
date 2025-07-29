@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -15,6 +15,7 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../constants/Colors';
 import { auth, db } from '../firebaseConfig';
 
@@ -77,6 +78,41 @@ const ProfileScreen = () => {
     );
   };
 
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert('Permission Denied', 'You need to grant permission to access the gallery.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage({ uri: result.assets[0].uri });
+
+      // Optionally, save the image URL to Firebase
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const usersSnapshot = await getDocs(collection(db, 'users'));
+          const userDoc = usersSnapshot.docs.find(doc => doc.data().email === user.email);
+          if (userDoc) {
+            const userRef = doc(db, 'users', userDoc.id);
+            await updateDoc(userRef, { profileImage: result.assets[0].uri });
+          }
+        }
+      } catch (error) {
+        console.error('Error saving profile image to Firestore:', error);
+      }
+    }
+  };
+
   const menuItems = [
     {
       section: 'Account',
@@ -106,7 +142,9 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.profileSection}>
-        <Image source={profileImage} style={styles.profileImage} />
+        <TouchableOpacity onPress={pickImage}>
+          <Image source={profileImage} style={styles.profileImage} />
+        </TouchableOpacity>
         <Text style={[styles.userName, { color: colors.text }]}>{userName}</Text>
         <Text style={[styles.memberSince, { color: colors.tint }]}>Member since {memberSince}</Text>
       </View>
