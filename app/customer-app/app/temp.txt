@@ -1,1 +1,4 @@
 temp file for code keeping
+
+note: Choose Vehicle dropdown in dashboard doesnt close after being opened. tested on ios with expo go.
+7:46 am, July 28th
