@@ -19,7 +19,7 @@ const { width, height } = Dimensions.get("window");
 const scale = (size: number) =>
   PixelRatio.roundToNearestPixel((width / 375) * size);
 
-export default function BookingScreen(): JSX.Element {
+export default function BookingScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() || "light";
   const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
@@ -38,12 +38,12 @@ export default function BookingScreen(): JSX.Element {
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView style={{paddingTop:'8%'}}>
         <Text style={[styles.heading, { color: colors.text }]}>
           Your move is booked!
         </Text>
 
-        <Text style={[styles.subheading, { color: colors.tint }]}>
+        <Text style={[styles.subheading, {padding:'2%', color: colors.tint }]}>
           You're all set for your move with MoveEase. Here's a summary of your
           booking:
         </Text>
@@ -95,25 +95,21 @@ export default function BookingScreen(): JSX.Element {
           ))}
         </View>
 
-        <View style={styles.buttonWrapper}>
           <PrimaryButton
-            style={[styles.thoseTwoButtons, {  backgroundColor: colors.tint, height:scale(55) }]}
+            style={[styles.thesebuttons, { backgroundColor: colors.tint }]}
             text="Track Move"
-            textStyle={[
-              styles.trackButtonText,
-              { fontSize: scale(18), color: colors.background },
-            ]}
+            textStyle={[styles.trackButtonText, { fontSize: scale(18), color: colors.background }]}
             borderRadius={Theme.borderRadius}
             onPress={() => router.push("/tracker")}
-          />
+            />
+
           <PrimaryButton
-            style={[styles.thoseTwoButtons, { backgroundColor: colors.icon }]}
+            style={[styles.thesebuttons, { backgroundColor: colors.icon }]}
             text="Go to Home"
             textStyle={[styles.trackButtonText, { color: colors.background }]}
             borderRadius={Theme.borderRadius}
-            onPress={() => router.back("/dashboard")}
+            onPress={() => router.push("/dashboard")}
           />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -121,7 +117,9 @@ export default function BookingScreen(): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
+    padding:10,
     flex: 1,
+    alignItems:'center',
   },
   heading: {
     fontSize: scale(24),
@@ -165,15 +163,12 @@ const styles = StyleSheet.create({
     marginBottom: scale(8),
   },
   buttonWrapper: {
-    paddingHorizontal: scale(16),
-    marginTop: scale(16),
+    // paddingHorizontal: scale(16),
+    // marginTop: scale(16),
+    backgroundColor:'red',
   },
-  thoseTwoButtons: {
-    borderRadius: scale(28),
-    height: scale(46),
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: scale(12),
+  thesebuttons:{
+    marginVertical:scale(5),
   },
   trackButtonText: {
     fontWeight: "500",
