@@ -178,7 +178,7 @@ const EditProfileScreen = () => {
             address,
             longitude,
             latitude,
-            profileImage: profileImage?.uri || null,
+            profileImage: profileImage?.uri || null, // Ensure profileImage is updated
           });
         }
         Alert.alert('Success', 'Profile updated successfully.');

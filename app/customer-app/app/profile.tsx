@@ -87,7 +87,7 @@ const ProfileScreen = () => {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -96,14 +96,14 @@ const ProfileScreen = () => {
     if (!result.canceled) {
       setProfileImage({ uri: result.assets[0].uri });
 
-      // Optionally, save the image URL to Firebase
+      // Save the image URL to Firestore
       try {
         const user = auth.currentUser;
         if (user) {
           const usersSnapshot = await getDocs(collection(db, 'users'));
           const userDoc = usersSnapshot.docs.find(doc => doc.data().email === user.email);
           if (userDoc) {
-            const userRef = doc(db, 'users', userDoc.id);
+            const userRef = doc(db, 'users', userDoc.id); // Ensure correct document ID is used
             await updateDoc(userRef, { profileImage: result.assets[0].uri });
           }
         }

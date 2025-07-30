@@ -159,15 +159,18 @@ const styles = StyleSheet.create({
     marginTop: height * 0.02,
     borderRadius: 25,
     overflow: 'hidden',
+    width: width * 0.5, // Adjusted width to make it smaller
+    alignSelf: 'center', // Center align the button
   },
   signupImage: {
-    width: width * 0.9,
-    height: height * 0.2,
+    width: '100%', // Adjusted to fit the new button size
+    height: height * 0.1, // Reduced height
     borderRadius: 25,
   },
   signupTextWrapper: {
     position: 'absolute',
-    top: '38%',
+    top: '50%', // Adjusted to center text vertically
+    transform: [{ translateY: -10 }], // Fine-tune vertical alignment
     left: 0,
     right: 0,
     alignItems: 'center',
