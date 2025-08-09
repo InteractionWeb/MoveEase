@@ -13,7 +13,6 @@ import {
   useColorScheme,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import OrderList from "../components/ui/Orderlist";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { Colors } from "../constants/Colors";
 import { Theme } from "../constants/Theme";
@@ -105,7 +104,79 @@ export default function TrackerScreen() {
         <FlatList
           data={orders}
           keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item }) => <OrderList orders={[item]} colors={colors} />}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  borderRadius: 16,
+                  padding: 12,
+                  marginBottom: 10,
+                  borderWidth: 1,
+                  backgroundColor: colors.card,
+                  borderColor: colors.card,
+                  marginHorizontal: 40,
+                },
+              ]}
+            >
+              <View style={[{
+                borderRadius: 16,
+                width: 32,
+                height: 32,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 8,
+                backgroundColor: colors.tint,
+              }]}>
+                <Text style={[{
+                  fontSize: 18,
+                  color: colors.background,
+                }]}>
+                  📦
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  color: colors.text,
+                }]}>
+                  {item.date}
+                </Text>
+                <Text style={[{
+                  fontSize: 15,
+                  color: colors.tint,
+                }]}>
+                  {item.address}
+                </Text>
+                <Text style={[{
+                  fontSize: 14,
+                  color: colors.tint,
+                }]}>
+                  Vendor: {item.vendor}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[{
+                  borderRadius: 12,
+                  paddingVertical: 6,
+                  paddingHorizontal: 10,
+                  marginLeft: 8,
+                  backgroundColor: colors.tint,
+                }]}
+                onPress={item.onPress}
+              >
+                <Text style={[{
+                  fontSize: 14,
+                  fontWeight: '600',
+                  color: colors.background,
+                }]}>
+                  View Details
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           ListEmptyComponent={() => (
             <View style={[styles.ordercontainer, { backgroundColor: colors.background }]}>
               <Text style={[styles.placeholderText, { color: colors.text, marginTop: 20 }]}>

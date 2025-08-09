@@ -124,7 +124,7 @@ const menuItems = [
     {
       section: 'Preferences',
       items: [
-        { label: 'Notifications', onPress: () => alert('Notifications settings not implemented yet') },
+        { label: 'Notifications', onPress: () => router.push('/notifications') },
         { label: 'Language', onPress: () => alert('Language settings not implemented yet') },
         { label: 'Logout', onPress: handleLogout },
       ],

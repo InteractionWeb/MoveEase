@@ -6,6 +6,7 @@ import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
 import { Colors } from '../constants/Colors';
+import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from '../constants/Config';
 import { auth, db } from '../firebaseConfig';
 
 // Responsive utility
@@ -95,11 +96,9 @@ const EditProfileScreen = () => {
       return;
     }
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`, {
-        headers: {
-          'User-Agent': 'MoveEaseApp/1.0 (your-email@example.com)'
-        }
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.LOCATIONIQ_SEARCH}?key=${LOCATIONIQ_API_KEY}&q=${encodeURIComponent(query)}&format=json&limit=5`
+      );
       const data = await response.json();
       setAddressSuggestions(data);
       setShowSuggestions(true);
@@ -129,11 +128,9 @@ const EditProfileScreen = () => {
     }
     try {
       console.log('Geocoding address:', address);
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`, {
-        headers: {
-          'User-Agent': 'MoveEaseApp/1.0 (contact@moveeaseapp.com)'
-        }
-      });
+      const response = await fetch(
+        `${API_ENDPOINTS.LOCATIONIQ_SEARCH}?key=${LOCATIONIQ_API_KEY}&q=${encodeURIComponent(address)}&format=json&limit=1`
+      );
       if (!response.ok) {
         console.error('Geocoding API response not ok:', response.status);
         Alert.alert('Error', `Geocoding API error: ${response.status}`);
