@@ -15,9 +15,9 @@ import {
   useColorScheme,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import PrimaryButton from "../components/ui/PrimaryButton.js";
-import { Colors } from "../constants/Colors.js";
-import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from "../constants/Config.js";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import { Colors } from "../constants/Colors";
+import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from "../constants/Config";
 import { auth, db } from "../firebaseConfig.js";
 
 // Responsive utility

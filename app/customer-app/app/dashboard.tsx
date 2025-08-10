@@ -20,12 +20,12 @@ import {
 } from "react-native";
 import * as Location from 'expo-location';
 import DateSelector from "../components/ui/DateSelector";
-import Freelocationsearch from "../components/ui/Freelocationsearch.js";
-import MapModal from "../components/ui/MapModal.js";
-import PrimaryButton from "../components/ui/PrimaryButton.js";
-import { Colors } from "../constants/Colors.js";
+import Freelocationsearch from "../components/ui/Freelocationsearch";
+import MapModal from "../components/ui/MapModal";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import { Colors } from "../constants/Colors";
 import { auth, db } from "../firebaseConfig.js";
-import { Order, OrderService } from "../services/orderService.js";
+import { Order, OrderService } from "../services/orderService";
 // import { Vendor, VendorService } from "../services/vendorService"; // Commented out until vendor app is ready
 
 const { width } = Dimensions.get("window");
@@ -532,10 +532,9 @@ const DashboardScreen = () => {
 
           {/* How It Works Section */}
           <View style={styles.howItWorksBox}>
-            <Image
-              source={require("../assets/images/partial-react-logo.png")}
-              style={styles.illustrationImg}
-            />
+            <View style={[styles.illustrationImg, { backgroundColor: colors.tint + '20', justifyContent: 'center', alignItems: 'center' }]}>
+              <Ionicons name="cube-outline" size={60} color={colors.tint} />
+            </View>
             <View style={styles.howItWorksSteps}>
               <Text style={[styles.howItWorksTitle, { color: colors.text }]}>
                 How it works

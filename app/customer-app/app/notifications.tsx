@@ -14,7 +14,7 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { Colors } from '../constants/Colors.js';
+import { Colors } from '../constants/Colors';
 
 // Responsive utility
 const { width } = Dimensions.get('window');

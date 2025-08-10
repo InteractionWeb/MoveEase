@@ -16,7 +16,7 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { Colors } from '../constants/Colors.js';
+import { Colors } from '../constants/Colors';
 import { auth, db } from '../firebaseConfig.js';
 
 // Responsive utility
@@ -33,7 +33,7 @@ const ProfileScreen = () => {
 
   const [userName, setUserName] = useState('Loading...');
   const [memberSince, setMemberSince] = useState('Loading...');
-  const [profileImage, setProfileImage] = useState(require('../assets/images/siuu.jpg'));
+  const [profileImage, setProfileImage] = useState(null); // Use null for default, will show placeholder
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -47,7 +47,7 @@ const ProfileScreen = () => {
             setProfileImage(
               userData.profileImage
                 ? { uri: userData.profileImage }
-                : require('../assets/images/siuu.jpg')
+                : null // No default image, will show placeholder
             );
           }
           if (user.metadata?.creationTime) {
@@ -143,7 +143,13 @@ const menuItems = [
 
       <View style={styles.profileSection}>
         <TouchableOpacity onPress={pickImage}>
-          <Image source={profileImage} style={styles.profileImage} />
+          {profileImage ? (
+            <Image source={profileImage} style={styles.profileImage} />
+          ) : (
+            <View style={[styles.profileImage, styles.placeholderImage, { backgroundColor: colors.tint + '20' }]}>
+              <Ionicons name="person" size={50} color={colors.tint} />
+            </View>
+          )}
         </TouchableOpacity>
         <Text style={[styles.userName, { color: colors.text }]}>{userName}</Text>
         <Text style={[styles.memberSince, { color: colors.tint }]}>Member since {memberSince}</Text>
@@ -196,6 +202,13 @@ const styles = StyleSheet.create({
     height: normalize(160),
     borderRadius: normalize(80),
     marginBottom: normalize(12),
+  },
+  placeholderImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderStyle: 'dashed',
   },
   userName: {
     fontSize: normalize(24),

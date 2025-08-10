@@ -15,10 +15,10 @@ import {
   View,
   useColorScheme,
 } from "react-native";
-import PrimaryButton from "../components/ui/PrimaryButton.js";
-import { Colors } from "../constants/Colors.js";
-import { Theme } from "../constants/Theme.js";
-import { Order, OrderService } from "../services/orderService.js";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import { Colors } from "../constants/Colors";
+import { Theme } from "../constants/Theme";
+import { Order, OrderService } from "../services/orderService";
 
 const { width, height } = Dimensions.get("window");
 const scale = (size: number) =>

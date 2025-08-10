@@ -13,9 +13,9 @@ import {
   useColorScheme,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import PrimaryButton from "../components/ui/PrimaryButton.js";
-import { Colors } from "../constants/Colors.js";
-import { Theme } from "../constants/Theme.js";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import { Colors } from "../constants/Colors";
+import { Theme } from "../constants/Theme";
 import { auth, db } from "../firebaseConfig.js";
 
 // Responsive utility
