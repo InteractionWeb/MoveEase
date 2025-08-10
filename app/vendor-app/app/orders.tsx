@@ -148,9 +148,9 @@ export default function OrdersScreen() {
   };
 
   const handleChatWithCustomer = (order: Order) => {
-    // For now, navigate to a placeholder - this would need proper routing setup
-    console.log('Chat with customer for order:', order.id);
-    // router.push('/chat'); // Uncomment when chat route is properly configured
+    // Navigate to chat screen with parameters
+    const chatParams = `?orderId=${order.id}&customerId=customer-id&customerName=${encodeURIComponent(order.customer)}`;
+    router.push(`/chat${chatParams}` as any);
   };
 
   const handleAcceptOrder = (orderId: string) => {
