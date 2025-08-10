@@ -13,10 +13,10 @@ import {
   useColorScheme,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import PrimaryButton from "../components/ui/PrimaryButton";
-import { Colors } from "../constants/Colors";
-import { Theme } from "../constants/Theme";
-import { auth, db } from "../firebaseConfig";
+import PrimaryButton from "../components/ui/PrimaryButton.js";
+import { Colors } from "../constants/Colors.js";
+import { Theme } from "../constants/Theme.js";
+import { auth, db } from "../firebaseConfig.js";
 
 // Responsive utility
 const { width } = Dimensions.get("window");
@@ -27,7 +27,7 @@ const normalize = (size: number) =>
 export default function TrackerScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() || "light";
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
@@ -191,13 +191,17 @@ export default function TrackerScreen() {
       </View>
 
       <PrimaryButton
-        style={[
-          styles.contactMoversButton,
-          { backgroundColor: colors.tint, marginBottom: normalize(20), height: normalize(66) },
-        ]}
-        text="Contact Movers"
-        textStyle={[styles.trackButtonText, { color: colors.background }]}
-        borderRadius={Theme.borderRadius}
+        style={{
+          ...styles.contactMoversButton,
+          backgroundColor: colors.tint,
+          marginBottom: normalize(20),
+          height: normalize(66),
+        }}
+        title="Contact Movers"
+        textStyle={{
+          ...styles.trackButtonText,
+          color: colors.background,
+        }}
         onPress={() => router.push("/contact")}
       />
     </View>

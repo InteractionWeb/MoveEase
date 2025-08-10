@@ -14,7 +14,7 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { Colors } from '../constants/Colors';
+import { Colors } from '../constants/Colors.js';
 
 // Responsive utility
 const { width } = Dimensions.get('window');
@@ -65,7 +65,7 @@ const defaultSettings: NotificationSettings = {
 const NotificationsScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme() || 'light';
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [settings, setSettings] = useState<NotificationSettings>(defaultSettings);
   const [isLoading, setIsLoading] = useState(true);

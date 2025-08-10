@@ -20,12 +20,12 @@ import {
 } from "react-native";
 import * as Location from 'expo-location';
 import DateSelector from "../components/ui/DateSelector";
-import Freelocationsearch from "../components/ui/Freelocationsearch";
-import MapModal from "../components/ui/MapModal";
-import PrimaryButton from "../components/ui/PrimaryButton";
-import { Colors } from "../constants/Colors";
-import { auth, db } from "../firebaseConfig";
-import { Order, OrderService } from "../services/orderService";
+import Freelocationsearch from "../components/ui/Freelocationsearch.js";
+import MapModal from "../components/ui/MapModal.js";
+import PrimaryButton from "../components/ui/PrimaryButton.js";
+import { Colors } from "../constants/Colors.js";
+import { auth, db } from "../firebaseConfig.js";
+import { Order, OrderService } from "../services/orderService.js";
 // import { Vendor, VendorService } from "../services/vendorService"; // Commented out until vendor app is ready
 
 const { width } = Dimensions.get("window");
@@ -35,7 +35,7 @@ const scale = (size: number) =>
 const DashboardScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme() || "light";
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   // Form state
   const [fromAddress, setFromAddress] = useState("");
@@ -432,8 +432,13 @@ const DashboardScreen = () => {
                 <Text style={[styles.inputLabel, { color: colors.text }]}>Date</Text>
                 <DateSelector
                   placeholder="Select date"
-                  onDateChange={setSelectedDate}
-                  style={[styles.inputBox, { backgroundColor: colors.background, borderColor: colors.tint }]}
+                  value={selectedDate || new Date()}
+                  onChange={setSelectedDate}
+                  style={{
+                    ...styles.inputBox,
+                    backgroundColor: colors.background,
+                    borderColor: colors.tint,
+                  }}
                 />
               </View>
 
@@ -512,11 +517,17 @@ const DashboardScreen = () => {
 
           {/* Find Movers Button */}
           <PrimaryButton
-            text={bookingLoading ? "Creating Booking..." : "Find Movers"}
+            title={bookingLoading ? "Creating Booking..." : "Find Movers"}
             onPress={handleFindMovers}
             disabled={bookingLoading}
-            style={[styles.findMoversButton, { backgroundColor: colors.tint }]}
-            textStyle={[styles.findMoversText, { color: colors.background }]}
+            style={{
+              ...styles.findMoversButton,
+              backgroundColor: colors.tint,
+            }}
+            textStyle={{
+              ...styles.findMoversText,
+              color: colors.background,
+            }}
           />
 
           {/* How It Works Section */}

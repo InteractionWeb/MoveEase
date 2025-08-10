@@ -15,10 +15,10 @@ import {
   View,
   useColorScheme,
 } from "react-native";
-import PrimaryButton from "../components/ui/PrimaryButton";
-import { Colors } from "../constants/Colors";
-import { Theme } from "../constants/Theme";
-import { Order, OrderService } from "../services/orderService";
+import PrimaryButton from "../components/ui/PrimaryButton.js";
+import { Colors } from "../constants/Colors.js";
+import { Theme } from "../constants/Theme.js";
+import { Order, OrderService } from "../services/orderService.js";
 
 const { width, height } = Dimensions.get("window");
 const scale = (size: number) =>
@@ -55,7 +55,7 @@ export default function BookingScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const colorScheme = useColorScheme() || "light";
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -134,7 +134,7 @@ export default function BookingScreen() {
           You haven't made any bookings yet.
         </Text>
         <PrimaryButton
-          text="Create New Booking"
+          title="Create New Booking"
           onPress={() => router.push("/dashboard")}
           style={styles.createBookingButton}
         />
@@ -275,25 +275,43 @@ export default function BookingScreen() {
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           <PrimaryButton
-            style={[styles.actionButton, { backgroundColor: colors.tint }]}
-            text="Track Move"
-            textStyle={[styles.buttonText, { color: colors.background }]}
+            style={{
+              ...styles.actionButton,
+              backgroundColor: colors.tint,
+            }}
+            title="Track Move"
+            textStyle={{
+              ...styles.buttonText,
+              color: colors.background,
+            }}
             onPress={handleTrackMove}
           />
 
           {order.vendorId && (
             <PrimaryButton
-              style={[styles.actionButton, { backgroundColor: colors.icon }]}
-              text="Contact Vendor"
-              textStyle={[styles.buttonText, { color: colors.background }]}
+              style={{
+                ...styles.actionButton,
+                backgroundColor: colors.icon,
+              }}
+              title="Contact Vendor"
+              textStyle={{
+                ...styles.buttonText,
+                color: colors.background,
+              }}
               onPress={handleContactVendor}
             />
           )}
 
           <PrimaryButton
-            style={[styles.actionButton, { backgroundColor: '#6c757d' }]}
-            text="Go to Dashboard"
-            textStyle={[styles.buttonText, { color: 'white' }]}
+            style={{
+              ...styles.actionButton,
+              backgroundColor: '#6c757d',
+            }}
+            title="Go to Dashboard"
+            textStyle={{
+              ...styles.buttonText,
+              color: 'white',
+            }}
             onPress={() => router.push("/dashboard")}
           />
         </View>

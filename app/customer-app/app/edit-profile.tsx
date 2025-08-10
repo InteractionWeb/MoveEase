@@ -5,9 +5,9 @@ import { updatePassword } from 'firebase/auth';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
-import { Colors } from '../constants/Colors';
-import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from '../constants/Config';
-import { auth, db } from '../firebaseConfig';
+import { Colors } from '../constants/Colors.js';
+import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from '../constants/Config.js';
+import { auth, db } from '../firebaseConfig.js';
 
 // Responsive utility
 const scale = (size: number) => {
@@ -19,7 +19,7 @@ const scale = (size: number) => {
 const EditProfileScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme() || 'light';
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');

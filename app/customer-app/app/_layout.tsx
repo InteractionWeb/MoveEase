@@ -3,11 +3,10 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { Colors } from '../constants/Colors';
+import { Colors } from '../constants/Colors.js';
 
 SplashScreen.preventAutoHideAsync();
 

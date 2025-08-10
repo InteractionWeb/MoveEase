@@ -16,8 +16,8 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { Colors } from '../constants/Colors';
-import { auth, db } from '../firebaseConfig';
+import { Colors } from '../constants/Colors.js';
+import { auth, db } from '../firebaseConfig.js';
 
 // Responsive utility
 const { width } = Dimensions.get('window');
@@ -29,7 +29,7 @@ const normalize = (size: number) =>
 const ProfileScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme() || 'light';
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [userName, setUserName] = useState('Loading...');
   const [memberSince, setMemberSince] = useState('Loading...');
