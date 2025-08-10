@@ -147,6 +147,12 @@ export default function OrdersScreen() {
     router.push(`/order/${orderId}`);
   };
 
+  const handleChatWithCustomer = (order: Order) => {
+    // For now, navigate to a placeholder - this would need proper routing setup
+    console.log('Chat with customer for order:', order.id);
+    // router.push('/chat'); // Uncomment when chat route is properly configured
+  };
+
   const handleAcceptOrder = (orderId: string) => {
     // TODO: Implement accept order logic
     console.log('Accept order:', orderId);
@@ -318,8 +324,16 @@ export default function OrdersScreen() {
                 </View>
               )}
 
-              {order.status === 'in_progress' && (
+              {(order.status === 'accepted' || order.status === 'in_progress') && (
                 <View style={styles.orderActions}>
+                  <TouchableOpacity
+                    style={styles.chatButton}
+                    onPress={() => handleChatWithCustomer(order)}
+                  >
+                    <Ionicons name="chatbubbles" size={16} color="#FFFFFF" />
+                    <Text style={styles.chatButtonText}>Chat</Text>
+                  </TouchableOpacity>
+                  
                   <PrimaryButton
                     title="Update Status"
                     onPress={() => handleOrderPress(order.id)}
@@ -568,6 +582,21 @@ const styles = StyleSheet.create({
   declineText: {
     fontSize: 14,
     color: Colors.error,
+    fontWeight: '600',
+  },
+  chatButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: Colors.primary,
+    gap: 6,
+  },
+  chatButtonText: {
+    fontSize: 14,
+    color: '#FFFFFF',
     fontWeight: '600',
   },
   updateButton: {
