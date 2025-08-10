@@ -1,5 +1,5 @@
 import { collection, addDoc, getDocs, doc, updateDoc, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { db } from '../firebaseConfig.js';
 
 // Vendor interface
 export interface Vendor {

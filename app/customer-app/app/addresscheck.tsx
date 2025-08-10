@@ -15,10 +15,10 @@ import {
   useColorScheme,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import PrimaryButton from "../components/ui/PrimaryButton";
-import { Colors } from "../constants/Colors";
-import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from "../constants/Config";
-import { auth, db } from "../firebaseConfig";
+import PrimaryButton from "../components/ui/PrimaryButton.js";
+import { Colors } from "../constants/Colors.js";
+import { LOCATIONIQ_API_KEY, API_ENDPOINTS } from "../constants/Config.js";
+import { auth, db } from "../firebaseConfig.js";
 
 // Responsive utility
 const { width } = Dimensions.get("window");
@@ -29,7 +29,7 @@ const normalize = (size: number) =>
 export default function AddressCheck() {
   const router = useRouter();
   const colorScheme = useColorScheme() || "light";
-  const colors = Colors[colorScheme as keyof typeof Colors] || Colors.light;
+  const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
@@ -232,7 +232,7 @@ export default function AddressCheck() {
         )}
         
         <PrimaryButton
-          text={isLoading ? "Geocoding..." : "Geocode & Save Address"}
+          title={isLoading ? "Geocoding..." : "Geocode & Save Address"}
           onPress={geocodeAddress}
           disabled={isLoading || !address}
           style={styles.geocodeButton}

@@ -1,5 +1,5 @@
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy } from 'firebase/firestore';
-import { db, auth } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig.js';
 
 // Order status types
 export type OrderStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
