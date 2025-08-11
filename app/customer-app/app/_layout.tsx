@@ -55,7 +55,6 @@ export default function RootLayout() {
       <Stack.Screen name="edit-profile" options={{ headerShown: false}} />
       <Stack.Screen name="addresscheck" options={{ headerShown: false}} />
       <Stack.Screen name="booking" options={{ headerShown: false}} />
-      <Stack.Screen name="contact" options={{ headerShown: false}} />
       <Stack.Screen name="tracker" options={{ headerShown: false}} />
       <Stack.Screen name="chat" options={{ headerShown: false}} />
       <Stack.Screen name="notifications" options={{ headerShown: false}} />

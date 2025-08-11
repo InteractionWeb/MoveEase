@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
@@ -17,6 +17,7 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import { Colors } from "../constants/Colors";
 import { Theme } from "../constants/Theme";
 import { auth, db } from "../firebaseConfig.js";
+import { Order, OrderService } from "../services/orderService";
 
 // Responsive utility
 const { width } = Dimensions.get("window");
@@ -26,11 +27,13 @@ const normalize = (size: number) =>
 
 export default function TrackerScreen() {
   const router = useRouter();
+  const { orderId } = useLocalSearchParams();
   const colorScheme = useColorScheme() || "light";
   const colors = (colorScheme === 'dark' ? Colors.dark : Colors.light);
 
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [orderData, setOrderData] = useState<any>(null);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -50,6 +53,33 @@ export default function TrackerScreen() {
     };
     fetchLocation();
   }, []);
+
+  useEffect(() => {
+    const fetchOrderData = async () => {
+      if (!orderId) return;
+      
+      try {
+        // First try to get from OrderService
+        const userOrders = await OrderService.getUserOrders();
+        const order = userOrders.find(order => order.id === orderId);
+        
+        if (order) {
+          setOrderData(order);
+        } else {
+          // Fallback to direct Firestore query
+          const ordersSnapshot = await getDocs(collection(db, "orders"));
+          const orderDoc = ordersSnapshot.docs.find(doc => doc.id === orderId);
+          if (orderDoc) {
+            setOrderData({ id: orderDoc.id, ...orderDoc.data() });
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch order data:", error);
+      }
+    };
+
+    fetchOrderData();
+  }, [orderId]);
 
   const orders = [
     {
@@ -202,7 +232,21 @@ export default function TrackerScreen() {
           ...styles.trackButtonText,
           color: colors.background,
         }}
-        onPress={() => router.push("/contact")}
+        onPress={() => {
+          if (orderData && orderData.vendorId && orderData.vendorName) {
+            router.push({
+              pathname: "/chat",
+              params: { 
+                orderId: orderData.id,
+                vendorId: orderData.vendorId,
+                vendorName: orderData.vendorName
+              }
+            });
+          } else {
+            // Fallback for orders without vendor assigned yet
+            alert("Vendor not assigned yet. Please check back later.");
+          }
+        }}
       />
     </View>
   );
