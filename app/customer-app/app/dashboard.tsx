@@ -20,12 +20,12 @@ import {
 } from "react-native";
 import * as Location from 'expo-location';
 import DateSelector from "../components/ui/DateSelector";
-import Freelocationsearch from "../components/ui/Freelocationsearch.js";
-import MapModal from "../components/ui/MapModal.js";
-import PrimaryButton from "../components/ui/PrimaryButton.js";
-import { Colors } from "../constants/Colors.js";
+import Freelocationsearch from "../components/ui/Freelocationsearch";
+import MapModal from "../components/ui/MapModal";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import { Colors } from "../constants/Colors";
 import { auth, db } from "../firebaseConfig.js";
-import { Order, OrderService } from "../services/orderService.js";
+import { Order, OrderService } from "../services/orderService";
 // import { Vendor, VendorService } from "../services/vendorService"; // Commented out until vendor app is ready
 
 const { width } = Dimensions.get("window");
@@ -276,6 +276,17 @@ const DashboardScreen = () => {
     router.push({
       pathname: "/booking",
       params: { orderData: JSON.stringify(order) }
+    });
+  };
+
+  const handleContactMover = (order: Order) => {
+    router.push({
+      pathname: "/chat",
+      params: { 
+        orderId: order.id,
+        vendorId: order.vendorId,
+        vendorName: order.vendorName
+      }
     });
   };
 
@@ -532,10 +543,9 @@ const DashboardScreen = () => {
 
           {/* How It Works Section */}
           <View style={styles.howItWorksBox}>
-            <Image
-              source={require("../assets/images/partial-react-logo.png")}
-              style={styles.illustrationImg}
-            />
+            <View style={[styles.illustrationImg, { backgroundColor: colors.tint + '20', justifyContent: 'center', alignItems: 'center' }]}>
+              <Ionicons name="cube-outline" size={60} color={colors.tint} />
+            </View>
             <View style={styles.howItWorksSteps}>
               <Text style={[styles.howItWorksTitle, { color: colors.text }]}>
                 How it works
@@ -566,25 +576,40 @@ const DashboardScreen = () => {
             <View style={styles.ordersSection}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>Recent Orders</Text>
               {orders.slice(0, 3).map((order, index) => (
-                <TouchableOpacity
+                <View
                   key={order.id || index}
                   style={[styles.orderItem, { backgroundColor: colors.background, borderColor: colors.tint }]}
-                  onPress={() => handleOrderPress(order)}
                 >
-                  <Text style={styles.orderIcon}>{getOrderIcon(order.status)}</Text>
-                  <View style={styles.orderDetails}>
-                    <Text style={[styles.orderDate, { color: colors.text }]}>
-                      {formatOrderDate(order.scheduledDate)}
-                    </Text>
-                    <Text style={[styles.orderAddress, { color: colors.text }]} numberOfLines={1}>
-                      {formatOrderAddress(order.fromAddress, order.toAddress)}
-                    </Text>
-                    <Text style={[styles.orderVendor, { color: colors.tint }]}>
-                      {order.vendorName || 'Assigning vendor...'}
-                    </Text>
-                  </View>
-                  <Ionicons name="chevron-forward" size={20} color={colors.tint} />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.orderMainContent}
+                    onPress={() => handleOrderPress(order)}
+                  >
+                    <Text style={styles.orderIcon}>{getOrderIcon(order.status)}</Text>
+                    <View style={styles.orderDetails}>
+                      <Text style={[styles.orderDate, { color: colors.text }]}>
+                        {formatOrderDate(order.scheduledDate)}
+                      </Text>
+                      <Text style={[styles.orderAddress, { color: colors.text }]} numberOfLines={1}>
+                        {formatOrderAddress(order.fromAddress, order.toAddress)}
+                      </Text>
+                      <Text style={[styles.orderVendor, { color: colors.tint }]}>
+                        {order.vendorName || 'Assigning vendor...'}
+                      </Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={colors.tint} />
+                  </TouchableOpacity>
+                  
+                  {/* Contact Movers Button - Show when vendor is assigned */}
+                  {order.vendorId && order.vendorName && (
+                    <TouchableOpacity
+                      style={[styles.contactButton, { backgroundColor: colors.tint }]}
+                      onPress={() => handleContactMover(order)}
+                    >
+                      <Ionicons name="chatbubbles" size={16} color="#FFFFFF" />
+                      <Text style={styles.contactButtonText}>Contact Mover</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               ))}
             </View>
           )}
@@ -832,12 +857,30 @@ const styles = StyleSheet.create({
     marginBottom: scale(12),
   },
   orderItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
     padding: scale(16),
     borderRadius: scale(12),
     borderWidth: 1,
     marginBottom: scale(8),
+  },
+  orderMainContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  contactButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: scale(12),
+    paddingVertical: scale(8),
+    borderRadius: scale(8),
+    marginTop: scale(12),
+  },
+  contactButtonText: {
+    color: '#FFFFFF',
+    fontSize: scale(14),
+    fontWeight: '600',
+    marginLeft: scale(6),
   },
   orderIcon: {
     fontSize: scale(24),

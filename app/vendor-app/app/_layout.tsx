@@ -72,6 +72,7 @@ export default function RootLayout() {
         <Stack.Screen name="orders" options={{ headerShown: false }} />
         <Stack.Screen name="earnings" options={{ headerShown: false }} />
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
+        <Stack.Screen name="chat" options={{ headerShown: false }} />
         <Stack.Screen name="order/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>

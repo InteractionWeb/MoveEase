@@ -1,20 +1,18 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { useColorScheme } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { Colors } from '../constants/Colors.js';
+import { Colors } from '../constants/Colors';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  // Remove custom font loading - using system fonts instead
+  const loaded = true;
 
   const CustomDarkTheme = {
     ...DarkTheme,
@@ -57,8 +55,8 @@ export default function RootLayout() {
       <Stack.Screen name="edit-profile" options={{ headerShown: false}} />
       <Stack.Screen name="addresscheck" options={{ headerShown: false}} />
       <Stack.Screen name="booking" options={{ headerShown: false}} />
-      <Stack.Screen name="contact" options={{ headerShown: false}} />
       <Stack.Screen name="tracker" options={{ headerShown: false}} />
+      <Stack.Screen name="chat" options={{ headerShown: false}} />
       <Stack.Screen name="notifications" options={{ headerShown: false}} />
       <Stack.Screen name="NotFoundScreen" options={{headerShown: false}} />
       </Stack>
